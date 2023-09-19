@@ -1,0 +1,28 @@
+const express=require('express')
+const router=express.Router()
+const userController=require('../controller/userController')
+const bookingController = require('../controller/bookingController')
+const chatController=require('../controller/chatController')
+const auth=require("../middleware/userAuth")
+
+router.post('/signup',userController.signUp)
+router.post('/login',userController.login)
+router.post('/verify',userController.verifyMail)
+router.post('/googlelogin',userController.googlelogin)
+router.get('/user-profile',auth.verifyToken,userController.userProfile)
+router.get('/getDetails',auth.verifyToken,userController.getDetails)
+router.patch('/user-edit',auth.verifyToken,userController.userEdit)
+router.get('/getTrips',userController.tripList)
+router.get('/getTripDetails',userController.tripDetails)
+router.post('/create-checkout-session',auth.verifyToken,bookingController.checkOut)
+router.post('/bookingSuccess',auth.verifyToken,bookingController.paymentSuccess)
+router.get('/getBookingHistory',auth.verifyToken,userController.bookingHistory)
+router.patch('/cancelBooking',auth.verifyToken,userController.cancelBooking)
+router.get('/getBookingDetails',auth.verifyToken,userController.getBooingDetails)
+router.post('/loadChat',auth.verifyToken,chatController.accessChatRoom)
+router.post('/addMessage',auth.verifyToken,chatController.addMessage)
+router.get('/transactions',auth.verifyToken,userController.transactions)
+
+router.post('/book',auth.verifyToken,bookingController.book)
+
+module.exports=router
