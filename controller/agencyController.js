@@ -45,7 +45,7 @@ const login = async (req, res, next) => {
     if (agency) {
       console.log('user findddd success');
       const isMatch = await bcrypt.compare(password, agency.password)
-      if (agency.isApproved === 1) {
+      if (agency.isApproved === 0) {
         if (isMatch) {
           console.log('passwd');
           const Token = authToken.generateAgencyToken(agency)
@@ -72,6 +72,38 @@ const login = async (req, res, next) => {
     }
   } catch (error) {
     res.json({ status: "failed", message: error.message });
+  }
+}
+
+const agentDetails=async(req,res)=>{
+  try {
+    const id = req.user._id
+    const agencyData=await agencyModel.findOne({_id:id},{_id:0,image:1,isApproved:1})
+    res.json({status: 'success', agencyData });
+  } catch (error) {
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+const agencyRegister=async(req,res)=>{
+  try {
+    const id = req.user._id
+    const {name,regNo,city,state,pin,photo}=req.body
+    const update=await agencyModel.updateOne(
+      {_id:id},
+      {$set:{
+        agentName:name,
+        regNumber:regNo,
+        city:city,
+        state:state,
+        pin:pin,
+        image:photo,
+        isApproved:1
+
+      }})
+      res.json({ status: "success",message:'verification details will be informed' });
+  } catch (error) {
+    res.json({ status: 'failed', message: error.message })
   }
 }
 
@@ -388,7 +420,7 @@ const dailydata = async (req, res) => {
 
 
 module.exports = {
-  signUp, login,
+  signUp, login,agencyRegister,agentDetails,
   getProfile,
   getDashboard, dailydata
 }

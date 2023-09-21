@@ -107,7 +107,7 @@ const blockAgency = async (req, res) => {
 
 const agencyList = async (req, res) => {
     try {
-        const agency = await agencyModel.find({ isApproved: 1 })
+        const agency = await agencyModel.find({ isApproved: 2 })
         res.json({ status: "success", result: agency });
     } catch (error) {
         res.json({ status: "failed", message: error.message });
@@ -117,7 +117,7 @@ const agencyList = async (req, res) => {
 const pendingAgencyList = async (req, res) => {
     try {
         console.log('hlolololo');
-        const agency = await agencyModel.find({ isApproved: 0 })
+        const agency = await agencyModel.find({ isApproved: 1 })
         res.json({ status: "success", result: agency });
     } catch (error) {
         res.json({ status: "failed", message: error.message });
@@ -178,7 +178,7 @@ const sendResponseMail = async (name, email, user_id, check) => {
 const approveAgency = async (req, res) => {
     try {
         const id = req.query.id;
-        const update = await agencyModel.updateOne({ _id: id }, { $set: { isApproved: 1 } });
+        const update = await agencyModel.updateOne({ _id: id }, { $set: { isApproved: 2 } });
 
         if (update) {
             const agency = await agencyModel.findOne({ _id: id })

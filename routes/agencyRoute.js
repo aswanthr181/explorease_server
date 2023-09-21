@@ -8,6 +8,8 @@ const auth=require('../middleware/userAuth')
 
 router.post('/signup',agencyController.signUp)
 router.post('/login',agencyController.login)
+router.patch('/agencyRegister',auth.verifyToken,agencyController.agencyRegister)
+router.get('/getAgencyData',auth.verifyToken,agencyController.agentDetails)
 router.post('/resgister-trip',auth.verifyToken,tripController.tripRegistration)
 router.post('/addIterate',tripController.addItenary)
 router.get('/getourTrips',auth.verifyToken,tripController.tripList)

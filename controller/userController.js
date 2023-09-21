@@ -111,7 +111,7 @@ const sendVerifyMail = async (name, email, user_id, check) => {
                 from: "traveliaexplore@gmail.com",
                 to: email,
                 subject: "To verify your mail",
-                html: `<p>Hii ${name}, Please click here to <a href="http://localhost:5173/turf/verifyTurf/${user_id}">Verify</a> your mail</p>`,
+                html: `<p>Hii ${name}, Please click here to <a href="https://www.explorease.site/verify/${user_id}">Verify</a> your mail</p>`,
             };
             transporter.sendMail(mailOption, function (error, info) {
                 if (error) {

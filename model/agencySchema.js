@@ -26,22 +26,36 @@ const agencySchema = new mongoose.Schema({
     },
     image: {
         type: String,
+        default:''
     },
 
 
     agentName: {
         type: String,
-
+        default:'',
         trim: true,
     },
     regNumber: {
         type: String,
         trim: true,
+        default:''
     },
     
     isApproved: {
         type: Number,
         default: 0
+    },
+    city:{
+        type:String,
+        default:''
+    },
+    state:{
+        type:String,
+        default:''
+    },
+    pin:{
+        type:String,
+        default:''
     },
 
     isBanned: { type: Boolean, default: false },
