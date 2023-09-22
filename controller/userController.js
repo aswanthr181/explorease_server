@@ -13,8 +13,6 @@ const adminModel = require('../model/adminSchema')
 
 const googlelogin = async (req, res, next) => {
     try {
-        console.log('controller')
-        console.log('payloas', req.body);
         const payloadDetails = req.body
 
         let userSignUp = {
@@ -34,7 +32,6 @@ const googlelogin = async (req, res, next) => {
                 isVerified: true,
                 isGoogleSign: true
             })
-            console.log('kkk0000i');
             const newUser = await userModel.findOne({ email: payloadDetails.email })
             console.log(newUser);
             const token = authToken.generateAuthToken(newUser)
@@ -46,7 +43,6 @@ const googlelogin = async (req, res, next) => {
 
             res.json({ Success: true, userSignUp })
         } else if (user.isGoogleSign === true) {
-            console.log('have account ');
             const token = authToken.generateAuthToken(user)
 
             userSignUp.Status = true,
@@ -56,7 +52,6 @@ const googlelogin = async (req, res, next) => {
 
             res.json({ Success: true, userSignUp })
         } else if (user.isGoogleSign === false) {
-            console.log('99999999999999999999999999999999999999999999');
             userSignUp.message = 'please log in using userDetails'
             res.json({ Success: false, userSignUp })
         } else {
@@ -73,7 +68,6 @@ const googlelogin = async (req, res, next) => {
 }
 
 const sendVerifyMail = async (name, email, user_id, check) => {
-    console.log('vrifu checejeje', email, user_id, check);
     try {
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
@@ -129,7 +123,6 @@ const sendVerifyMail = async (name, email, user_id, check) => {
 
 const verifyMail = async (req, res) => {
     try {
-        console.log('hiiii', req.body);
         let encoded = req.body.token;
         console.log(encoded)
 
@@ -149,11 +142,11 @@ const verifyMail = async (req, res) => {
 
 const signUp = async (req, res, next) => {
     try {
-console.log('signupppppppppppppppppppp');
         let userData = req.body
         const findUser = await userModel.find({ email: userData.email })
+        const findNumber=await userModel.find({ email: userData.mobile })
 
-        if (findUser.length === 0) {
+        if (findUser.length === 0 || findNumber.length === 0 ) {
             userData.password = await bcrypt.hash(userData.password, 10)
             userModel.create({
                 name: userData.name,
@@ -186,7 +179,7 @@ console.log('signupppppppppppppppppppp');
             
 
         } else {
-            return res.json({ error: "User already exists" });
+            return res.json({ error: "User already exists with user credential" });
         }
     } catch (error) {
         console.log(error);
@@ -280,13 +273,15 @@ const getDetails = async (req, res, next) => {
 
 const userEdit = async (req, res, next) => {
     try {
-        console.log("first")
         const data = req.body
-        console.log('edit details++++++++++++++', data);
         const id = req.user._id
-        const update = await userModel.updateOne({ _id: id }, { $set: { name: data.name, mobile: data.phone, image: data.photo } })
-        console.log(update);
-        res.json({ status: "success" });
+        const phone=await userModel.find({mobile: data.phone})
+        if(phone.length>0){
+            res.json({ status: "failed"  });
+        }else{
+            const update = await userModel.updateOne({ _id: id }, { $set: { name: data.name, mobile: data.phone, image: data.photo } })
+            res.json({ status: "success" });
+        }
     } catch (error) {
         console.log(error.message);
         res.json({ status: "failed", message: error.message });
@@ -295,7 +290,6 @@ const userEdit = async (req, res, next) => {
 
 const tripList = async (req, res, next) => {
     try {
-        console.log('triplist controleer');
         const trips = await tripModel.find({})
         res.json({ Status: "success", result: trips })
     } catch (error) {
@@ -306,9 +300,7 @@ const tripList = async (req, res, next) => {
 
 const tripDetails = async (req, res, next) => {
     try {
-        console.log('ajmal vaaaanam');
         const id = req.query.id
-        console.log('iddddd', id);
         const tripData = await tripModel.findOne({ _id: id })
 
         if (tripData) {
@@ -336,19 +328,16 @@ const cancelBooking = async (req, res) => {
     try {
         const id = req.user._id;
         const bookingId = req.query.id
-        console.log('cancelbooking');
         const update = await bookingModel.updateOne({ _id: bookingId }, { $set: { isCanceled: 1 } })
         const booking1 = await bookingModel.findOne({ _id: bookingId })
         const booking2 = await bookingModel.findOne({ _id: bookingId }).populate('trip')
         const booking = await bookingModel.find({ user: id }).populate('trip')
-        console.log('cancel done');
         const updatedUser = await userModel.findByIdAndUpdate(
             { _id: id },
             { $inc: { wallet: booking1.advance * 0.8 } }, // Increment the 'wallet' field by the specified amount
             { new: true } // Return the updated document
         );
         const now = new Date()
-        console.log('transcationsche,a');
         const transaction = await transactioModel.create({
             user: id,
             trip: booking1.trip,
