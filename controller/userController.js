@@ -182,7 +182,7 @@ console.log('signupppppppppppppppppppp');
               console.log(emails,'-------');
               res.json({ status: true, result: userData });
             }
-            
+            res.json({ status: false, result: userData,message:'error occured for sending mail' });
             
 
         } else {
