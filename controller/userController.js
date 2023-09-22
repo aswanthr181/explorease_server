@@ -97,7 +97,7 @@ const sendVerifyMail = async (name, email, user_id, check) => {
                 from: "traveliaexplore@gmail.com",
                 to: email,
                 subject: "To verify your mail",
-                html: `<p>Hii ${name}, Please click here to <a href="https://www.explorease.site/verify/${encoded}">Verify</a> your mail to explore Travelia</p>`,
+                html: `<p>Hii ${name}, Please click here to <a href="https://www.explorease.site/verify/${encoded}">Verify</a> your mail to explore the explorease</p>`,
             };
             transporter.sendMail(mailOption, function (error, info) {
                 if (error) {
@@ -119,7 +119,8 @@ const sendVerifyMail = async (name, email, user_id, check) => {
                 } else {
                     console.log("Email has been sent:-", info.response);
                 }
-            });
+            })
+            
         }
     } catch (error) {
         console.log(error + "haaai");
@@ -148,7 +149,7 @@ const verifyMail = async (req, res) => {
 
 const signUp = async (req, res, next) => {
     try {
-
+console.log('signupppppppppppppppppppp');
         let userData = req.body
         const findUser = await userModel.find({ email: userData.email })
 
@@ -175,15 +176,20 @@ const signUp = async (req, res, next) => {
 
             const newUser = await userModel.findOne({ email: userData.email })
             console.log('send verigy mllll');
+            
             if(newUser){
-                await sendVerifyMail(newUser.name, newUser.email, newUser._id, true)
+              const emails=   await sendVerifyMail(newUser.name, newUser.email, newUser._id, true)
+              console.log(emails,'-------');
+              res.json({ status: true, result: userData });
             }
-            res.json({ status: true, result: userData });
+            
+            
 
         } else {
             return res.json({ error: "User already exists" });
         }
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 }

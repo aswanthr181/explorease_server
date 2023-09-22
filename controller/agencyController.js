@@ -6,10 +6,8 @@ const authToken = require('../middleware/userAuth')
 
 const signUp = async (req, res, next) => {
   try {
-    console.log('hiiiiiiiiiiiiiii');
     const { name, email, phone, password } = req.body
     const findAgency = await agencyModel.find({ email: email })
-    console.log('signup page firsttttttttttttt');
     if (findAgency.length === 0) {
       const hash = await bcrypt.hash(password, 10)
       console.log('signu');
@@ -45,7 +43,7 @@ const login = async (req, res, next) => {
     if (agency) {
       console.log('user findddd success');
       const isMatch = await bcrypt.compare(password, agency.password)
-      if (agency.isApproved === 0) {
+      // if (agency.isApproved === 0) {
         if (isMatch) {
           console.log('passwd');
           const Token = authToken.generateAgencyToken(agency)
@@ -59,10 +57,11 @@ const login = async (req, res, next) => {
           agentLogin.message = 'wrong password'
           res.send({ agentLogin });
         }
-      } else {
-        agentLogin.message = 'You were not Approved'
-        res.send({ agentLogin })
-      }
+      // }
+      //  else {
+      //   agentLogin.message = 'You were not Approved'
+      //   res.send({ agentLogin })
+      // }
 
 
 
