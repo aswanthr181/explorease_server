@@ -145,8 +145,9 @@ const signUp = async (req, res, next) => {
         let userData = req.body
         const findUser = await userModel.find({ email: userData.email })
         const findNumber=await userModel.find({ email: userData.mobile })
+       console.log();
 
-        if (findUser.length === 0 || findNumber.length === 0 ) {
+        if (findUser.length === 0 && findNumber.length === 0 ) {
             userData.password = await bcrypt.hash(userData.password, 10)
             userModel.create({
                 name: userData.name,
