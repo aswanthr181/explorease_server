@@ -16,9 +16,7 @@ const dashboardDetails = async (req, res) => {
         const agency = await agencyModel.find({})
         const trips = await tripModel.find({})
 
-        // details.user=users.length
-        // details.agency=agency.length
-        // details.trips=trips.length
+       
         let details = {
             userCount: users.length,
             agencyCount: agency.length,

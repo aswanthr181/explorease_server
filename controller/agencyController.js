@@ -120,69 +120,7 @@ const getProfile = async (req, res) => {
 
 const getDashboard = async (req, res) => {
   try {
-    //         const sixMonthsAgo = new Date();
-    //     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-
-    //     const monthlyData=await bookingModel.aggregate([
-    //         {
-    //           $group: {
-    //             _id: {
-    //               year: { $year: '$bookedDate' },
-    //               month: { $month: '$bookedDate' },
-    //             },
-    //             totalBookings: { $sum: 1 },
-    //             totalRevenue: { $sum: '$advance' },
-    //           },
-    //         },
-    //         {
-    //           $project: {
-    //             _id: 0,
-    //             year: '$_id.year',
-    //             month: '$_id.month',
-    //             totalBookings: 1,
-    //             totalRevenue: 1,
-    //           },
-    //         },
-    //       ]);
-    //       console.log('monthlydataa===',monthlyData);
-    //       const tripSchedule = await tripModel.aggregate([
-    //         {
-    //           $group: {
-    //             _id: {
-    //               year: { $year: '$date' },
-    //               month: { $month: '$date' },
-    //             },
-    //             totalTrips: { $sum: 1 },
-    //           },
-    //         },
-    //         {
-    //           $project: {
-    //             _id: 0,
-    //             year: '$_id.year',
-    //             month: '$_id.month',
-    //             totalTrips: 1,
-    //           },
-    //         },
-    //       ]);
-
-    //       console.log('tripschedule',tripSchedule);
-    //       const dataToSend = monthlyData.map((monthly) => {
-    //         const matchingTrip = tripSchedule.find(
-    //           (trip) =>
-    //             trip.year === monthly.year && trip.month === monthly.month
-    //         );
-
-    //         return {
-    //           year: monthly.year,
-    //           month: monthly.month,
-    //           totalBookings: monthly.totalBookings,
-    //           totalRevenue: monthly.totalRevenue/1000,
-    //           totalTrips: matchingTrip ? matchingTrip.totalTrips : 0,
-    //         };
-    //       });
-    // console.log('123',dataToSend,'456');
-
-    //   res.json(dataToSend);
+    
     const id = req.user._id
     const agency = await agencyModel.findOne({ _id: id })
     const today = new Date();
@@ -305,56 +243,7 @@ const getDashboard = async (req, res) => {
 const dailydata = async (req, res) => {
   console.log('********');
   try {
-    // const { year, month } = req.params; // Extract year and month from request parameters
-    // const startOfMonth = new Date(year, month - 1, 1); // Adjust month (0-based index)
-    // const endOfMonth = new Date(year, month, 0);
-
-    // console.log('start daily',year, month);
-
-    // // Query the database for trips within the specified month
-    // const tripData = await tripModel.find({
-    //   date: { $gte: startOfMonth, $lte: endOfMonth },
-    // });
-
-    // // Create an array to store daily data
-    // const dailyData = [];
-
-    // // Loop through each day in the selected month and aggregate data
-    // for (let date = new Date(startOfMonth); date <= endOfMonth; date.setDate(date.getDate() + 1)) {
-    //   const dayData = tripData.filter((trip) => {
-    //     // Compare the date part of trip.date with the current date
-    //     const tripDate = new Date(trip.date);
-    //     return (
-    //       tripDate.getDate() === date.getDate() &&
-    //       tripDate.getMonth() === date.getMonth() &&
-    //       tripDate.getFullYear() === date.getFullYear()
-    //     );
-    //   });
-
-    //   // Calculate aggregate values for the day
-    //   const totalTrips = dayData.length;
-
-    //   // Fetch bookings for the day
-    //   const bookingsForDay = await bookingModel.find({
-    //     trip: { $in: dayData.map((trip) => trip._id) },
-    //     bookedDate: { $gte: date, $lt: new Date(date).setDate(date.getDate() + 1) }, // Bookings for the current day
-    //   });
-
-    //   const totalBookings = bookingsForDay.length;
-
-    //   // Calculate total revenue for the day based on booking advances
-    //   const totalRevenue = bookingsForDay.reduce((total, booking) => total + booking.advance, 0);
-
-    //   dailyData.push({
-    //     date: date.toISOString(), // Convert the date to ISO format or any format you prefer
-    //     totalTrips,
-    //     totalBookings,
-    //     totalRevenue,
-    //   });
-    // }
-    // console.log(dailyData,'1212');
-
-    // res.status(200).json(dailyData);
+    
     const id = req.user._id
     const agency = await agencyModel.findOne({ _id: id })
     const { year, month } = req.params; // Extract year and month from request parameters

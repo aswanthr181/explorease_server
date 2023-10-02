@@ -41,7 +41,7 @@ const googlelogin = async (req, res, next) => {
                 userSignUp.token = token,
                 userSignUp.name = newUser.name
 
-            res.json({ Success: true, userSignUp })
+            res.json({ Success: true, userSignUp,user:newUser })
         } else if (user.isGoogleSign === true) {
             const token = authToken.generateAuthToken(user)
 
@@ -50,7 +50,7 @@ const googlelogin = async (req, res, next) => {
                 userSignUp.token = token,
                 userSignUp.name = user.name
 
-            res.json({ Success: true, userSignUp })
+            res.json({ Success: true, userSignUp,user })
         } else if (user.isGoogleSign === false) {
             userSignUp.message = 'please log in using userDetails'
             res.json({ Success: false, userSignUp })
@@ -114,7 +114,7 @@ const sendVerifyMail = async (name, email, user_id, check) => {
                     console.log("Email has been sent:-", info.response);
                 }
             })
-            
+
         }
     } catch (error) {
         console.log(error + "haaai");
@@ -144,10 +144,10 @@ const signUp = async (req, res, next) => {
     try {
         let userData = req.body
         const findUser = await userModel.find({ email: userData.email })
-        const findNumber=await userModel.find({ email: userData.mobile })
-       console.log();
+        const findNumber = await userModel.find({ mobile: userData.mobile })
+        console.log(findUser.length, findNumber.length);
 
-        if (findUser.length === 0 && findNumber.length === 0 ) {
+        if (findUser.length === 0 && findNumber.length === 0) {
             userData.password = await bcrypt.hash(userData.password, 10)
             userModel.create({
                 name: userData.name,
@@ -170,14 +170,14 @@ const signUp = async (req, res, next) => {
 
             const newUser = await userModel.findOne({ email: userData.email })
             console.log('send verigy mllll');
-            
-            if(newUser){
-              const emails=   await sendVerifyMail(newUser.name, newUser.email, newUser._id, true)
-              console.log(emails,'-------');
-              res.json({ status: true, result: userData });
+
+            if (newUser) {
+                const emails = await sendVerifyMail(newUser.name, newUser.email, newUser._id, true)
+                console.log(emails, '-------');
+                res.json({ status: true, result: userData });
             }
-            res.json({ status: false, result: userData,message:'error occured for sending mail' });
-            
+            res.json({ status: false, result: userData, message: 'error occured for sending mail' });
+
 
         } else {
             return res.json({ error: "User already exists with user credential" });
@@ -276,10 +276,10 @@ const userEdit = async (req, res, next) => {
     try {
         const data = req.body
         const id = req.user._id
-        const phone=await userModel.find({mobile: data.phone})
-        if(phone.length>0){
-            res.json({ status: "failed"  });
-        }else{
+        const phone = await userModel.find({ mobile: data.phone })
+        if (phone.length > 0) {
+            res.json({ status: "failed" });
+        } else {
             const update = await userModel.updateOne({ _id: id }, { $set: { name: data.name, mobile: data.phone, image: data.photo } })
             res.json({ status: "success" });
         }
